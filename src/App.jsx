@@ -20,10 +20,6 @@ export default function App()
   const [newNote, setNewNote] = useState("")
   const [showNotePanel, setShowNotePanel] = useState(false)
 
-
-  // TASK
-  const [showTaskPanel, setShowTaskPanel] = useState(false)
-
   function deleteNote(indexToDelete)
   {
     //    setNotes((prevNotes) => prevNotes.filter((_, index) => index !== indexToDelete));
@@ -39,14 +35,54 @@ export default function App()
   function addNote()
   {
     setNotes([...notes, newNote])
-
+    setNewNote("")
+    setShowNotePanel(false)
   }
 
   function handleNoteInputChange(event)
   {
     setNewNote(event.target.value)
+  }
 
-    console.log("EVENT CHANGE")
+
+  // TASK
+  const [showTaskPanel, setShowTaskPanel] = useState(false)
+
+
+  // TASK || PRIORITY
+  const [priority, setPriority] = useState("Low")
+  const [counter, setCounter] = useState(1);
+  console.log(counter)
+  console.log(priority)
+
+  function changePriority()
+  {
+    let newCounter = counter + 1;
+    console.log(newCounter)
+
+
+    if (newCounter > 3)
+    {
+      console.log("RESETTED")
+      newCounter = 1;
+    }
+
+    setCounter(newCounter)
+
+    switch (newCounter)
+    {
+      case 1:
+        setPriority("Low")
+        break;
+      case 2:
+        setPriority("Medium")
+        break;
+      case 3:
+        setPriority("High")
+        break;
+    }
+    console.log(priority)
+
   }
 
   return (
@@ -98,7 +134,6 @@ export default function App()
 
         </div>
 
-
         <section className="border-2 rounded-lg shadow-lg flex-[3] ">
 
           <header className="p-3 border-b-2 flex flex-row items-center justify-between">
@@ -115,7 +150,12 @@ export default function App()
 
             {taskData.map(function (task, index)
             {
-              return (<Task key={index} title={task.TaskTitle} description={task.TaskDescription} priority={task.TaskPriority} />)
+              return (<Task
+                key={index}
+                title={task.TaskTitle}
+                description={task.TaskDescription}
+                priority={task.TaskPriority}
+                changePriority={changePriority} />)
             })}
 
           </main>
