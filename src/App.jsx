@@ -12,7 +12,7 @@ export default function App()
     < >
       <Header />
 
-      <main className="flex flex-row my-12 justify-start mx-12 gap-6 ">
+      <main className="flex flex-col lg:flex-row my-12 justify-start mx-12 gap-6 ">
         <div className="flex-[1]  flex flex-col  justify-between  ">
 
           <aside className="shadow-lg flex flex-col gap-2 p-3" >
@@ -21,7 +21,14 @@ export default function App()
               <h1 className="text-2xl">Notes</h1>
               <hr />
             </div>
-            <section className="border-2 max-h-[45vh] rounded-lg p-3 overflow-y-scroll">
+            <section className="border-2  min-h-[45vh] max-h-[45vh] rounded-lg p-3 overflow-y-scroll">
+              <Notes />
+              <Notes />
+              <Notes />
+              <Notes />
+              <Notes />
+              <Notes />
+              <Notes />
               <Notes />
               <Notes />
               <Notes />
@@ -45,16 +52,8 @@ export default function App()
             <button className="bg-[#5C9967] py-2 px-3 rounded-md text-lg text-white ">Add</button>
           </header>
 
-          <main className="p-3 grid grid-cols-2 gap-2 max-h-[73vh] overflow-y-scroll">
+          <main className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-2 min-h-[73vh] max-h-[73vh] overflow-y-scroll ">
 
-            <Task />
-            <Task />
-            <Task />
-
-            <Task />
-            <Task />
-            <Task />
-            <Task />
 
             <Task />
             <Task />
