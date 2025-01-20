@@ -50,39 +50,28 @@ export default function App()
 
 
   // TASK || PRIORITY
-  const [priority, setPriority] = useState("Low")
-  const [counter, setCounter] = useState(1);
-  console.log(counter)
-  console.log(priority)
+  const [tasks, setTasks] = useState(taskData)
 
-  function changePriority()
+  function changePriority(id)
   {
-    let newCounter = counter + 1;
-    console.log(newCounter)
-
-
-    if (newCounter > 3)
+    setTasks(function (prevTasks)
     {
-      console.log("RESETTED")
-      newCounter = 1;
-    }
+      return prevTasks.map(function (task)
+      {
+        if (task.id === id)
+        {
+          const newPriority = task.TaskPriority === "Low" ?
+            "Medium" : task.TaskPriority === "Medium" ?
+              "High" : "Low"
 
-    setCounter(newCounter)
-
-    switch (newCounter)
-    {
-      case 1:
-        setPriority("Low")
-        break;
-      case 2:
-        setPriority("Medium")
-        break;
-      case 3:
-        setPriority("High")
-        break;
-    }
-    console.log(priority)
-
+          return {
+            ...task,
+            TaskPriority: newPriority
+          }
+        }
+        return task;
+      })
+    })
   }
 
   return (
@@ -148,15 +137,15 @@ export default function App()
           <main className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-2 min-h-[73vh] max-h-[73vh] overflow-y-scroll ">
 
 
-            {taskData.map(function (task, index)
-            {
-              return (<Task
-                key={index}
+            {tasks.map((task) => (
+              <Task
+                key={task.id}
                 title={task.TaskTitle}
                 description={task.TaskDescription}
                 priority={task.TaskPriority}
-                changePriority={changePriority} />)
-            })}
+                changePriority={() => changePriority(task.id)}
+              />
+            ))}
 
           </main>
         </section>
