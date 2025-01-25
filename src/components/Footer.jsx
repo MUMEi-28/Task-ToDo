@@ -7,7 +7,7 @@ export default function Footer()
             <p className="">
                 &copy; {new Date().getFullYear()} by MJ.
             </p>
-            <a className="flex flex-row items-center gap-2" href=""><img className="h-[1rem]" src={githubImg} alt="github" /> Github Repository</a>
+            <a className="flex flex-row items-center gap-2" href="https://github.com/MUMEi-28/Task-ToDo"><img className="h-[1rem]" src={githubImg} alt="github" /> Github Repository</a>
 
         </footer>
     )
