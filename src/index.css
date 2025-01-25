@@ -22,3 +22,8 @@ body
 {
     scrollbar-color: #d1b2ad transparent;
 }
+
+.no-scroll
+{
+    overflow: hidden;
+}

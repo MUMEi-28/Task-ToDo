@@ -7,14 +7,19 @@ import Footer from "./components/Footer.jsx"
 
 import NotePanel from "./Panels/NotePanel.jsx"
 import TaskPanel from "./Panels/TaskPanel.jsx"
+import EditTaskPanel from "./Panels/EditTaskPanel.jsx"
 
 import noteData from "./data/NoteData.js"
 import taskData from "./data/TaskData.js"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
 
 export default function App()
 {
+
+
+
   // NOTES
   const [notes, setNotes] = useState(noteData)
   const [newNote, setNewNote] = useState("")
@@ -38,19 +43,34 @@ export default function App()
     setNewNote("")
     setShowNotePanel(false)
   }
-
   function handleNoteInputChange(event)
   {
     setNewNote(event.target.value)
   }
 
-
   // TASK
   const [showTaskPanel, setShowTaskPanel] = useState(false)
-
-
-  // TASK || PRIORITY
   const [tasks, setTasks] = useState(taskData)
+  const [currentSelectedTask, setCurrentSelectedTask] = useState(null)
+
+  function addTask(newTask)
+  {
+    setTasks(function (prevTasks)
+    {
+      return [...prevTasks, newTask]
+    })
+  }
+
+  function deleteTask(id)
+  {
+    setTasks(function (prevTask)
+    {
+      return (prevTask.filter(function (task)
+      {
+        return task.id !== id
+      }))
+    })
+  }
 
   function changePriority(id)
   {
@@ -73,6 +93,38 @@ export default function App()
       })
     })
   }
+
+  function editTask(id)
+  {
+    const selectedTask = tasks.find(function (task) { return task.id === id })
+    setCurrentSelectedTask(selectedTask)
+  }
+  function saveTask()
+  {
+    setTasks(function (prevTasks)
+    {
+      return prevTasks.map(function (task)
+      {
+        return task.id === currentSelectedTask.id ? currentSelectedTask : task
+      })
+    })
+
+    setCurrentSelectedTask(null)
+  }
+
+  useEffect(() =>
+  {
+    // Disable scrolling if any of the panels are showing
+    if (currentSelectedTask || showTaskPanel || showNotePanel)
+    {
+      document.body.classList.add("no-scroll");
+    } else
+    {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [currentSelectedTask, showTaskPanel, showNotePanel]); // Dependency array to watch for changes
+
+
 
   return (
     < >
@@ -118,7 +170,7 @@ export default function App()
 
           <section className="border-2 bg-[#d1b2ad] text-black p-3 rounded-lg ">
             <h1 className="text-3xl text-center">Pending Tasks</h1>
-            <p className="text-center m-3  text-4xl font-bold font-sans">15</p>
+            <p className="text-center m-3  text-4xl font-bold font-sans">{tasks.length}</p>
           </section>
 
         </div>
@@ -131,11 +183,22 @@ export default function App()
               onClick={function () { return setShowTaskPanel(true) }}
             >Add</button>
 
-            {showTaskPanel && <TaskPanel onHidePanel={function () { return setShowTaskPanel(false) }} />}
+            {currentSelectedTask &&
+              <EditTaskPanel
+                currentSelectedTask={currentSelectedTask}
+                setCurrentSelectedTask={setCurrentSelectedTask}
+                onHidePanel={function () { setCurrentSelectedTask(null) }}
+                saveTask={saveTask}
+              />}
+
+            {showTaskPanel && <TaskPanel
+              onHidePanel={function () { return setShowTaskPanel(false) }}
+              addTask={addTask}
+              currentTaskCount={tasks.length}
+            />}
           </header>
 
-          <main className="p-3 grid grid-cols-1 lg:grid-cols-2 gap-2 min-h-[73vh] max-h-[73vh] overflow-y-scroll ">
-
+          <main className="p-3 grid grid-cols-1 grid-flow-dense auto-rows-min lg:grid-cols-2 gap-1 min-h-[73vh] max-h-[73vh] overflow-y-scroll">
 
             {tasks.map((task) => (
               <Task
@@ -144,10 +207,13 @@ export default function App()
                 description={task.TaskDescription}
                 priority={task.TaskPriority}
                 changePriority={() => changePriority(task.id)}
+                deleteTask={() => deleteTask(task.id)}
+                onEdit={function () { editTask(task.id) }}
               />
             ))}
 
           </main>
+
         </section>
       </main>
 
